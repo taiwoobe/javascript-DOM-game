@@ -13,32 +13,19 @@ var score, roundScore, activePlayer;
 
 var diceDOM = document.querySelector('.dice');
 
-score = [0,0];
-roundScore = 0;
-activePlayer = 0;
-
-
-// document.querySelector('#current-' + activePlayer).textContent = dice;
+onPageInit();
 
 
 // Reading values from the DOM using the querySelector() method.
 // var scoreZero = document.querySelector('#score-0').textContent;
 // console.log(scoreZero);
 
-// Modifying the CSS attribute of the DOM using the querySelector() method. This can be set directly in CSS though. 
-diceDOM.style.display = 'none';
-
-
-// Setting all values to 0 on page load.
-document.getElementById('score-0').textContent = '0'
-document.getElementById('score-1').textContent = '0'
-document.getElementById('current-0').textContent = '0'
-document.getElementById('current-1').textContent = '0'
 
 // Function that is called once the roll button is cliked.
 // function btnRollClicked() {
 //    Do something here
 // }
+
 
 // Getting the button that performs the roll dice function.
 
@@ -88,8 +75,10 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
     }
 });
 
+document.querySelector('.btn-new').addEventListener('click', onPageInit);
 
 
+// function that calls the next player.
 function nextPlayer() {
     // Terminate current player and move to Next Player.
     // To do that, we need to get the active player first and then switch it using the tenary operator. 
@@ -109,4 +98,32 @@ function nextPlayer() {
 
     // Hiding the image once a user rolls 1 so the next user can start. 
     diceDOM.style.display = 'none';
+}
+
+
+// Function to be called when the page starts up or is restarted. 
+function onPageInit() {
+    score = [0,0];
+    roundScore = 0;
+    activePlayer = 0;
+
+    // Modifying the CSS attribute of the DOM using the querySelector() method. This can be set directly in CSS though. 
+    diceDOM.style.display = 'none';
+
+    // Setting all values to 0 on page load.
+    document.getElementById('score-0').textContent = '0';
+    document.getElementById('score-1').textContent = '0';
+    document.getElementById('current-0').textContent = '0';
+    document.getElementById('current-1').textContent = '0';
+
+    // Setting player names back to default. 
+    document.getElementById('name-0').textContent = 'Player 1';
+    document.getElementById('name-1').textContent = 'Player 2';
+
+    // remove extra css from players
+    document.querySelector('.player-0-panel').classList.remove('winner');
+    document.querySelector('.player-1-panel').classList.remove('winner');
+    document.querySelector('.player-0-panel').classList.remove('active');
+    document.querySelector('.player-1-panel').classList.remove('active');
+    document.querySelector('.player-0-panel').classList.add('active');
 }
