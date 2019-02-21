@@ -9,7 +9,7 @@ GAME RULES:
 
 */
 
-var score, roundScore, activePlayer;
+var score, roundScore, activePlayer, gamePlaying;
 
 var diceDOM = document.querySelector('.dice');
 
@@ -38,40 +38,45 @@ onPageInit();
 //An anonymous function is a function that doesnt have a name and cannot be reused outside of its scope. 
 
 document.querySelector('.btn-roll').addEventListener('click', function() {
-    // Generating a random number for our dice. 
-    var dice = Math.floor(Math.random() * 6) + 1;
-
-    // Display the result
-    diceDOM.style.display = 'block';
-    diceDOM.src = 'dice-' + dice + '.png';
-
-    // Update the round score iff dice rolled is not 1. 
-    if (dice !== 1){
-        // Add dice score to roundscore
-        roundScore += dice;
-        document.querySelector('#current-' + activePlayer).textContent = roundScore;
-
-    } else {
-        nextPlayer();
-    }
+    if (gamePlaying) {
+        // Generating a random number for our dice. 
+        var dice = Math.floor(Math.random() * 6) + 1;
+    
+        // Display the result
+        diceDOM.style.display = 'block';
+        diceDOM.src = 'dice-' + dice + '.png';
+    
+        // Update the round score iff dice rolled is not 1. 
+        if (dice !== 1){
+            // Add dice score to roundscore
+            roundScore += dice;
+            document.querySelector('#current-' + activePlayer).textContent = roundScore;
+    
+        } else {
+            nextPlayer();
+        }
+    } 
 });
 
 
 document.querySelector('.btn-hold').addEventListener('click', function() {
-    // Add current/round score to the Global Score 
-    score[activePlayer] += roundScore;
-
-    // Update the UI to effect the new score 
-    document.querySelector('#score-' + activePlayer).textContent = score[activePlayer];
-
-    // Check if player has won the game
-    if (score[activePlayer] >= 10) {
-        document.querySelector('#name-' + activePlayer).textContent = 'Winner!!!';
-        diceDOM.style.display = 'none';
-        document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
-        document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
-    } else {
-        nextPlayer();
+    if (gamePlaying) {
+        // Add current/round score to the Global Score 
+        score[activePlayer] += roundScore;
+    
+        // Update the UI to effect the new score 
+        document.querySelector('#score-' + activePlayer).textContent = score[activePlayer];
+    
+        // Check if player has won the game
+        if (score[activePlayer] >= 10) {
+            document.querySelector('#name-' + activePlayer).textContent = 'Winner!!!';
+            diceDOM.style.display = 'none';
+            document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
+            document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
+            gamePlaying = false;
+        } else {
+            nextPlayer();
+        }
     }
 });
 
@@ -106,6 +111,7 @@ function onPageInit() {
     score = [0,0];
     roundScore = 0;
     activePlayer = 0;
+    gamePlaying = true;
 
     // Modifying the CSS attribute of the DOM using the querySelector() method. This can be set directly in CSS though. 
     diceDOM.style.display = 'none';
