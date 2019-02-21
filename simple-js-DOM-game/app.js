@@ -11,6 +11,8 @@ GAME RULES:
 
 var score, roundScore, activePlayer;
 
+var diceDOM = document.querySelector('.dice');
+
 score = [0,0];
 roundScore = 0;
 activePlayer = 0;
@@ -20,14 +22,14 @@ activePlayer = 0;
 
 
 // Reading values from the DOM using the querySelector() method.
-var scoreZero = document.querySelector('#score-0').textContent;
-console.log(scoreZero);
+// var scoreZero = document.querySelector('#score-0').textContent;
+// console.log(scoreZero);
 
 // Modifying the CSS attribute of the DOM using the querySelector() method. This can be set directly in CSS though. 
-document.querySelector('.dice').style.display = 'none';
+diceDOM.style.display = 'none';
 
 
-//
+// Setting all values to 0 on page load.
 document.getElementById('score-0').textContent = '0'
 document.getElementById('score-1').textContent = '0'
 document.getElementById('current-0').textContent = '0'
@@ -51,10 +53,8 @@ document.getElementById('current-1').textContent = '0'
 document.querySelector('.btn-roll').addEventListener('click', function() {
     // Generating a random number for our dice. 
     var dice = Math.floor(Math.random() * 6) + 1;
-    console.log(dice);
 
     // Display the result
-    var diceDOM = document.querySelector('.dice');
     diceDOM.style.display = 'block';
     diceDOM.src = 'dice-' + dice + '.png';
 
@@ -65,23 +65,48 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
         document.querySelector('#current-' + activePlayer).textContent = roundScore;
 
     } else {
-        // Terminate current player and move to Next Player.
-        // To do that, we need to get the active player first and then switch it using the tenary operator. 
-        activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
-        roundScore = 0;
-        document.getElementById('current-0').textContent = '0';
-        document.getElementById('current-1').textContent = '0';
-
-        // Remove and Add CSS classes to the active and inactive player 
-
-        // document.querySelector('.player-0-panel').classList.remove('active');
-        // document.querySelector('.player-1-panel').classList.add('active');
-
-        document.querySelector('.player-0-panel').classList.toggle('active');
-        document.querySelector('.player-0-panel').classList.toggle('active');
-
-        // Hiding the image once a user rolls 1 so the next user can start. 
-        diceDOM.style.display = 'none';
-
+        nextPlayer();
     }
 });
+
+
+document.querySelector('.btn-hold').addEventListener('click', function() {
+    // Add current/round score to the Global Score 
+    score[activePlayer] += roundScore;
+
+    // Update the UI to effect the new score 
+    document.querySelector('#score-' + activePlayer).textContent = score[activePlayer];
+
+    // Check if player has won the game
+    if (score[activePlayer] >= 10) {
+        document.querySelector('#name-' + activePlayer).textContent = 'Winner!!!';
+        diceDOM.style.display = 'none';
+        document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
+        document.querySelector('.player-' + activePlayer + '-panel').classList.remove('active');
+    } else {
+        nextPlayer();
+    }
+});
+
+
+
+function nextPlayer() {
+    // Terminate current player and move to Next Player.
+    // To do that, we need to get the active player first and then switch it using the tenary operator. 
+        
+    activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
+    roundScore = 0;
+    document.getElementById('current-0').textContent = '0';
+    document.getElementById('current-1').textContent = '0';
+
+    // Remove and Add CSS classes to the active and inactive player 
+
+    // document.querySelector('.player-0-panel').classList.remove('active');
+    // document.querySelector('.player-1-panel').classList.add('active');
+
+    document.querySelector('.player-0-panel').classList.toggle('active');
+    document.querySelector('.player-1-panel').classList.toggle('active');
+
+    // Hiding the image once a user rolls 1 so the next user can start. 
+    diceDOM.style.display = 'none';
+}
