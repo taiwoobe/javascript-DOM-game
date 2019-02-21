@@ -59,4 +59,29 @@ document.querySelector('.btn-roll').addEventListener('click', function() {
     diceDOM.src = 'dice-' + dice + '.png';
 
     // Update the round score iff dice rolled is not 1. 
+    if (dice !== 1){
+        // Add dice score to roundscore
+        roundScore += dice;
+        document.querySelector('#current-' + activePlayer).textContent = roundScore;
+
+    } else {
+        // Terminate current player and move to Next Player.
+        // To do that, we need to get the active player first and then switch it using the tenary operator. 
+        activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
+        roundScore = 0;
+        document.getElementById('current-0').textContent = '0';
+        document.getElementById('current-1').textContent = '0';
+
+        // Remove and Add CSS classes to the active and inactive player 
+
+        // document.querySelector('.player-0-panel').classList.remove('active');
+        // document.querySelector('.player-1-panel').classList.add('active');
+
+        document.querySelector('.player-0-panel').classList.toggle('active');
+        document.querySelector('.player-0-panel').classList.toggle('active');
+
+        // Hiding the image once a user rolls 1 so the next user can start. 
+        diceDOM.style.display = 'none';
+
+    }
 });
